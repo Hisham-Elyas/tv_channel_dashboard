@@ -16,7 +16,7 @@ class PagesController extends GetxController {
   int pageNum = 0;
   goToPage(int page) {
     if (page > screen.length - 1) {
-      Get.offAll(const LoginScreen());
+      Get.offAll(() => const LoginScreen());
     } else {
       pageNum = page;
       update();
