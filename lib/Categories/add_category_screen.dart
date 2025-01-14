@@ -23,10 +23,11 @@ class AddCategoryScreen extends StatelessWidget {
                 isShowBackButton: true,
               ),
             Padding(
-              padding: EdgeInsets.only(left: 35.w, right: 5.w), //47* - 28*
+              padding: EdgeInsets.symmetric(
+                  horizontal: 35.w, vertical: 28.h), //47* - 28*
               child: Container(
                 width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 28.h),
                 color: AppColor.mainGrey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +46,7 @@ class AddCategoryScreen extends StatelessWidget {
                     const CustomTextFormField(
                       hintText: "Category Image",
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 25.h),
                     CustomButtom(
                         height: 88.h,
                         color: AppColor.mainColor,
