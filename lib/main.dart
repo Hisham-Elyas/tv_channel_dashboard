@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.mainColor)
               .copyWith(surface: AppColor.backgroundColor),
         ),
-        // home: const MainScreen(),
-        home: const LoginScreen(),
+        home: const MainScreen(),
+        // home: const LoginScreen(),
       ),
     );
   }
