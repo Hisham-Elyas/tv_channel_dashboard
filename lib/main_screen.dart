@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/widget/menu/home_nav_bar.dart';
 
 import 'app_color.dart';
+import 'features/widget/menu/home_nav_bar.dart';
+import 'features/widget/menu/home_side_bar_menu_section.dart';
 import 'page_controller.dart';
 import 'responsive.dart';
-import 'widget/menu/home_side_bar_menu_section.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});

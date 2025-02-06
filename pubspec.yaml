@@ -38,6 +38,10 @@ dependencies:
   flutter_svg: ^2.0.17
   percent_indicator: ^4.2.4
   flutter_screenutil: ^5.9.3
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.3.5
+  skeletonizer: ^1.4.3
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
