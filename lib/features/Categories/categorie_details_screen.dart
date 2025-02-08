@@ -7,6 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../app_color.dart';
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
+import '../Channels/video_player_screen.dart';
 import '../widget/menu/home_nav_bar.dart';
 import 'controllers/categorie_details_controller.dart';
 import 'data/models/category_channels_model.dart';
@@ -162,14 +163,31 @@ class ChannelsCardWidget extends StatelessWidget {
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               SizedBox(height: 8.h),
-              FittedBox(
-                child: ElevatedButton(
-                  onPressed: onPressedDelete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.to(() => VideoPlayerScreen(
+                            videoUrl: channels.url,
+                          ));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text("Play"),
                   ),
-                  child: const Text("Delete"),
-                ),
+                  SizedBox(width: 8.h),
+                  FittedBox(
+                    child: ElevatedButton(
+                      onPressed: onPressedDelete,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: const Text("Delete"),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
