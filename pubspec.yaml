@@ -42,6 +42,10 @@ dependencies:
   shared_preferences: ^2.3.5
   skeletonizer: ^1.4.3
   dartz: ^0.10.1
+  internet_connection_checker: ^3.0.1
+  cached_network_image: ^3.4.1
+  modern_player: ^0.1.0
+  flutter_vlc_player_platform_interface: ^2.0.3
 
 dev_dependencies:
   flutter_test:

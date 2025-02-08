@@ -91,9 +91,9 @@ class GroupOfChannelScreen extends StatelessWidget {
                             : LayoutBuilder(
                                 builder: (context, constraints) {
                                   int columns = constraints.maxWidth > 900
-                                      ? 3
+                                      ? 5
                                       : constraints.maxWidth > 600
-                                          ? 2
+                                          ? 3
                                           : 1;
 
                                   return GridView.builder(
@@ -152,20 +152,22 @@ class GroupChannelCardWidget extends StatelessWidget {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.dm),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              groupChannel.groupTitle,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            FittedBox(
+              child: Text(
+                groupChannel.groupTitle,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               groupChannel.channels.toString(),
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(

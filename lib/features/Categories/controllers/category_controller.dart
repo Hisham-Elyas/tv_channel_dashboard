@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../../core/helpers/coustom_overlay.dart';
 import '../../../core/helpers/enums.dart';
 import '../data/models/category_model.dart';
 import '../data/repos/category_repo.dart';
@@ -27,5 +28,17 @@ class CategoryController extends GetxController {
       statusReq = StatusRequest.success;
       update();
     });
+  }
+
+  Future<void> deleteCategory({required int categoryId}) async {
+    late bool resalt;
+    await showOverlay(
+      asyncFunction: () async {
+        resalt = await categoryRepo.deleteCategory(categoryId: categoryId);
+      },
+    );
+    if (resalt == true) {
+      getAllCategorys();
+    }
   }
 }

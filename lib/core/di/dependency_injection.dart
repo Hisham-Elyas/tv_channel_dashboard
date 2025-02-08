@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../features/Categories/controllers/categorie_details_controller.dart';
 import '../../features/Categories/controllers/category_controller.dart';
+import '../../features/Categories/controllers/create_category_controller.dart';
 import '../../features/Categories/data/remote/category_channel_remote_data.dart';
 import '../../features/Categories/data/repos/category_repo.dart';
 import '../../features/Channels/controllers/channel_controller.dart';
@@ -49,4 +50,5 @@ Future<void> setupGetIt() async {
       fenix: true);
   Get.lazyPut(() => CategoryController(), fenix: true);
   Get.lazyPut(() => CategorieDetailsController(), fenix: true);
+  Get.lazyPut(() => CreateCategoryController(), fenix: true);
 }

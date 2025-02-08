@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../app_color.dart';
 import '../../core/helpers/enums.dart';
@@ -10,7 +12,8 @@ import 'controllers/categorie_details_controller.dart';
 import 'data/models/category_channels_model.dart';
 
 class CategorieDetailsScreen extends StatelessWidget {
-  const CategorieDetailsScreen({super.key});
+  final int categorieId;
+  const CategorieDetailsScreen({super.key, required this.categorieId});
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +98,13 @@ class CategorieDetailsScreen extends StatelessWidget {
                                     itemCount: controller.channels.length,
                                     itemBuilder: (context, index) {
                                       return ChannelsCardWidget(
+                                          onPressedDelete: () {
+                                            controller
+                                                .removeChannelFromCategory(
+                                                    channelId: controller
+                                                        .channels[index].id,
+                                                    categoryId: categorieId);
+                                          },
                                           channels: controller.channels[index]);
                                     },
                                   );
@@ -113,9 +123,11 @@ class CategorieDetailsScreen extends StatelessWidget {
 
 class ChannelsCardWidget extends StatelessWidget {
   final Channel channels;
+  final void Function()? onPressedDelete;
   const ChannelsCardWidget({
     super.key,
     required this.channels,
+    this.onPressedDelete,
   });
 
   @override
@@ -136,9 +148,28 @@ class ChannelsCardWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Image.network(
-                channels.tvgLogo,
+              SizedBox(height: 8.h),
+              CachedNetworkImage(
                 fit: BoxFit.contain,
+                imageUrl: channels.tvgLogo,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Skeletonizer(
+                  enableSwitchAnimation: true,
+                  enabled: true,
+                  child: Skeleton.shade(
+                      child: Icon(Icons.live_tv_outlined, size: 150.dm)),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+              SizedBox(height: 8.h),
+              FittedBox(
+                child: ElevatedButton(
+                  onPressed: onPressedDelete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text("Delete"),
+                ),
               ),
             ],
           ),

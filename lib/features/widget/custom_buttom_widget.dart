@@ -20,14 +20,14 @@ class CustomButtom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-          color: color, borderRadius: BorderRadius.circular(15.r)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(15.r),
-        onTap: onTap,
+    return InkWell(
+      borderRadius: BorderRadius.circular(15.r),
+      onTap: onTap,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(15.r)),
         child: Center(
             child: Text(
           title,

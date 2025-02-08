@@ -8,12 +8,18 @@ class CustomTextFormField extends StatelessWidget {
   final double? height;
   final double? width;
   final int? maxLines;
+  final String? initialValue;
+  final void Function(String?)? onSaved;
+  final String? Function(String?)? validator;
   const CustomTextFormField({
     super.key,
     required this.hintText,
     this.height,
     this.width,
     this.maxLines = 1,
+    this.onSaved,
+    this.validator,
+    this.initialValue,
   });
 
   @override
@@ -29,6 +35,9 @@ class CustomTextFormField extends StatelessWidget {
               color: AppColor.backgroundColor2,
               borderRadius: BorderRadius.circular(10.r)),
           child: TextFormField(
+            initialValue: initialValue,
+            onSaved: onSaved,
+            validator: validator,
             maxLines: maxLines,
             autocorrect: true,
             cursorHeight: 30.h,

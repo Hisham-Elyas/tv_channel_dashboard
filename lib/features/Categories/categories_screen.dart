@@ -12,6 +12,7 @@ import 'categorie_details_screen.dart';
 import 'controllers/categorie_details_controller.dart';
 import 'controllers/category_controller.dart';
 import 'data/models/category_model.dart';
+import 'edit_category_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
   CategoriesScreen({super.key});
@@ -103,6 +104,19 @@ class CategoriesScreen extends StatelessWidget {
                                     itemCount: controller.categorys.length,
                                     itemBuilder: (context, index) {
                                       return CategoriesCardWidget(
+                                          onPressedEdit: () {
+                                            Get.to(() => EditCategoryScreen(
+                                                  categoryId: controller
+                                                      .categorys[index].id,
+                                                  categoryName: controller
+                                                      .categorys[index].name,
+                                                ));
+                                          },
+                                          onPressedDelete: () {
+                                            controller.deleteCategory(
+                                                categoryId: controller
+                                                    .categorys[index].id);
+                                          },
                                           onTap: () {
                                             CategorieDetailsController
                                                 categorieDetailsController =
@@ -111,8 +125,9 @@ class CategoriesScreen extends StatelessWidget {
                                                 .getAllchannelsInCategorys(
                                                     categoryId: controller
                                                         .categorys[index].id);
-                                            Get.to(() =>
-                                                const CategorieDetailsScreen());
+                                            Get.to(() => CategorieDetailsScreen(
+                                                categorieId: controller
+                                                    .categorys[index].id));
                                           },
                                           category:
                                               controller.categorys[index]);
@@ -134,10 +149,14 @@ class CategoriesScreen extends StatelessWidget {
 class CategoriesCardWidget extends StatelessWidget {
   final Category category;
   final void Function()? onTap;
+  final void Function()? onPressedDelete;
+  final void Function()? onPressedEdit;
   const CategoriesCardWidget({
     super.key,
     required this.category,
     this.onTap,
+    this.onPressedDelete,
+    this.onPressedEdit,
   });
 
   @override
@@ -167,6 +186,31 @@ class CategoriesCardWidget extends StatelessWidget {
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                SizedBox(height: 50.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      child: ElevatedButton(
+                        onPressed: onPressedEdit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: const Text("Edit"),
+                      ),
+                    ),
+                    SizedBox(width: 20.h),
+                    FittedBox(
+                      child: ElevatedButton(
+                        onPressed: onPressedDelete,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: const Text("Delete"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

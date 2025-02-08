@@ -1,8 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dashboard_tv_channel/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
@@ -10,6 +14,7 @@ import '../widget/menu/home_nav_bar.dart';
 import 'controllers/channel_controller.dart';
 import 'data/models/channel_model.dart';
 import 'data/models/group_channel_model.dart';
+import 'video_player_screen.dart';
 
 class ChannelScreen extends StatelessWidget {
   final GroupChannelModel channel;
@@ -77,9 +82,9 @@ class ChannelScreen extends StatelessWidget {
                             : LayoutBuilder(
                                 builder: (context, constraints) {
                                   int columns = constraints.maxWidth > 900
-                                      ? 3
+                                      ? 4
                                       : constraints.maxWidth > 600
-                                          ? 2
+                                          ? 3
                                           : 1;
 
                                   return GridView.builder(
@@ -118,48 +123,61 @@ class ChannelCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(channel.tvgLogo);
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0.dm),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              channel.name,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
+            FittedBox(
+              child: Text(
+                channel.name,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+            ),
+            CachedNetworkImage(
+              width: 150.w,
+              height: 150.h,
+              fit: BoxFit.contain,
+              imageUrl: channel.tvgLogo,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Skeletonizer(
+                enableSwitchAnimation: true,
+                enabled: true,
+                child: Skeleton.shade(
+                    child: Icon(Icons.live_tv_outlined, size: 150.dm)),
+              ),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => VideoPlayerScreen(
+                          videoUrl: channel.url,
+                        ));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
                   child: const Text("Play"),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                FittedBox(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: const Text("Add to Gategory"),
                   ),
-                  child: const Text("Delete"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Get.to(() =>
-                    //     const AddandEditChannelScreen(title: 'Edit'));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                  ),
-                  child: const Text("Edit"),
                 ),
               ],
             ),

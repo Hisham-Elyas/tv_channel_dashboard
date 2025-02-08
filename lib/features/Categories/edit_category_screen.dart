@@ -9,8 +9,11 @@ import '../widget/custom_text_form_field_widget.dart';
 import '../widget/menu/home_nav_bar.dart';
 import 'controllers/create_category_controller.dart';
 
-class AddCategoryScreen extends StatelessWidget {
-  const AddCategoryScreen({super.key});
+class EditCategoryScreen extends StatelessWidget {
+  final int categoryId;
+  final String categoryName;
+  const EditCategoryScreen(
+      {super.key, required this.categoryId, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +41,14 @@ class AddCategoryScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Add Categories",
+                          "Edit Categories",
                           style: TextStyle(
                               fontSize: 20.sp, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         SizedBox(height: 10.h),
                         CustomTextFormField(
+                          initialValue: categoryName,
                           hintText: "Category Name",
                           validator: controller.categoryNamevalidator,
                           onSaved: (val) => controller.setCategoryName = val,
@@ -58,7 +62,7 @@ class AddCategoryScreen extends StatelessWidget {
                             height: 88.h,
                             color: AppColor.mainColor,
                             onTap: () {
-                              controller.createCategory();
+                              controller.updateCategory(categoryId: categoryId);
                             },
                             title: "Submit")
                       ],
