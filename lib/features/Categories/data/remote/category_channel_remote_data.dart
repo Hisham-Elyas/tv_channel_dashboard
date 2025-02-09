@@ -11,7 +11,9 @@ abstract class CategoryRemoteDate {
   Future<bool> createCategory({required String name});
   Future<bool> deleteCategory({required int categoryId});
   Future<bool> addChannelToCategory(
-      {required int categoryId, required int channelId});
+      {required int categoryId,
+      required int channelId,
+      required String channelName});
   Future<bool> removeChannelFromCategory(
       {required int categoryId, required int channelId});
   Future getAllChannelInCategoryById({required int categoryId});
@@ -56,14 +58,21 @@ class CategoryRemoteDateImplHttp implements CategoryRemoteDate {
 
   @override
   Future<bool> addChannelToCategory(
-      {required int categoryId, required int channelId}) async {
+      {required int categoryId,
+      required int channelId,
+      required String channelName}) async {
     final resalt = await apiClent.posData(
-        body: {"channel_id": channelId},
-        //categories/:id/channels
+        body: {
+          "categoryId": categoryId,
+          "channelId": channelId,
+          "channelName": channelName,
+        },
+
+        ///api/categories/addChannel
 
         uri:
-            '${ApiConstants.apiBaseUrl}${ApiConstants.categories}/$categoryId${ApiConstants.channels}');
-    if (resalt.statusCode == 200) {
+            '${ApiConstants.apiBaseUrl}${ApiConstants.categories}${ApiConstants.addChannel}');
+    if (resalt.statusCode == 201) {
       return true;
     } else {
       log(resalt.body.toString());

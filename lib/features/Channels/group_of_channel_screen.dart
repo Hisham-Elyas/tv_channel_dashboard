@@ -34,100 +34,117 @@ class GroupOfChannelScreen extends StatelessWidget {
           Expanded(
               child: Padding(
             padding: EdgeInsets.only(left: 35.w, right: 5.w), //47* - 28*
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  color: AppColor.mainGrey,
-                  child: Row(
-                    children: [
-                      const Text(
-                        "All Channels",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          // Get.to(() => const GroupChannelCardWidget(
-                          //     title: 'Add'));
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: GetBuilder<GroupsChannelController>(
-                    builder: (controller) => controller.statusReq ==
-                            StatusRequest.loading
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : controller.statusReq == StatusRequest.serverFailure
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Please_try_agein_later",
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          controller.getAllGroupsChannel();
-                                        },
-                                        child: const Text("TryAgain"))
-                                  ],
-                                ),
-                              )
-                            : LayoutBuilder(
-                                builder: (context, constraints) {
-                                  int columns = constraints.maxWidth > 900
-                                      ? 5
-                                      : constraints.maxWidth > 600
-                                          ? 3
-                                          : 1;
+            child: GetBuilder<GroupsChannelController>(
+              builder: (controller) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    color: AppColor.mainGrey,
+                    child: const Row(
+                      children: [
+                        Text(
+                          "All Group Of Channels",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
 
-                                  return GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: columns,
-                                      crossAxisSpacing: 16,
-                                      mainAxisSpacing: 16,
-                                      childAspectRatio: 1.5,
-                                    ),
-                                    itemCount: controller.groupsChannel.length,
-                                    itemBuilder: (context, index) {
-                                      return GroupChannelCardWidget(
-                                          onTap: () {
-                                            ChannelsController
-                                                channelsController = Get.find();
-                                            channelsController
-                                                .getAllGroupsChannelById(
-                                                    groupId: controller
-                                                        .groupsChannel[index]
-                                                        .id);
-                                            Get.to(() => ChannelScreen(
-                                                channel: controller
-                                                    .groupsChannel[index]));
-                                          },
-                                          groupChannel:
-                                              controller.groupsChannel[index]);
-                                    },
-                                  );
-                                },
-                              ),
+                        Spacer(),
+
+                        // IconButton(
+                        //   onPressed: () {
+                        //     // Get.to(() => const GroupChannelCardWidget(
+                        //     //     title: 'Add'));
+                        //   },
+                        //   icon: const Icon(Icons.add),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 35.w, vertical: 10.h),
+                    child: TextField(
+                      controller: controller.searchController,
+                      onChanged: controller.filterGroups,
+                      decoration: InputDecoration(
+                        hintText: "Search...",
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                      child: controller.statusReq == StatusRequest.loading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : controller.statusReq == StatusRequest.serverFailure
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Please_try_agein_later",
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            controller.getAllGroupsChannel();
+                                          },
+                                          child: const Text("TryAgain"))
+                                    ],
+                                  ),
+                                )
+                              : LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    int columns = constraints.maxWidth > 900
+                                        ? 5
+                                        : constraints.maxWidth > 600
+                                            ? 3
+                                            : 2;
+
+                                    return GridView.builder(
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: columns,
+                                        crossAxisSpacing: 16,
+                                        mainAxisSpacing: 16,
+                                        childAspectRatio: 1.5,
+                                      ),
+                                      itemCount:
+                                          controller.filteredGroups.length,
+                                      itemBuilder: (context, index) {
+                                        return GroupChannelCardWidget(
+                                            onTap: () {
+                                              ChannelsController
+                                                  channelsController =
+                                                  Get.find();
+                                              channelsController
+                                                  .getAllGroupsChannelById(
+                                                      groupId: controller
+                                                          .filteredGroups[index]
+                                                          .id);
+                                              Get.to(() => ChannelScreen(
+                                                  channel: controller
+                                                      .filteredGroups[index]));
+                                            },
+                                            groupChannel: controller
+                                                .filteredGroups[index]);
+                                      },
+                                    );
+                                  },
+                                )),
+                ],
+              ),
             ),
           )),
         ],
@@ -152,90 +169,42 @@ class GroupChannelCardWidget extends StatelessWidget {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: EdgeInsets.all(16.0.dm),
+        padding: EdgeInsets.all(Responsive.isMobile(context) ? 5.h : 16.0.dm),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FittedBox(
               child: Text(
                 groupChannel.groupTitle,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: Responsive.isMobile(context) ? 70.sp : 16.sp,
+                    fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: Responsive.isMobile(context) ? 0.h : 8.h),
             Text(
               groupChannel.channels.toString(),
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: Responsive.isMobile(context) ? 60.sp : 16.sp,
+                  fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: Responsive.isMobile(context) ? 0.h : 16.h),
             ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
+                // fixedSize: const Size(20, 5),
+                minimumSize:
+                    Responsive.isMobile(context) ? const Size(70, 25) : null,
+                padding: Responsive.isMobile(context)
+                    ? const EdgeInsets.all(0)
+                    : null,
                 backgroundColor: Colors.red,
               ),
-              child: const Text("View all ",
-                  style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChannelCardWidget extends StatelessWidget {
-  final String title;
-  const ChannelCardWidget({
-    super.key,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: const Text("Play"),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text("Delete"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Get.to(() =>
-                    //     const AddandEditGroupOfChannelScreen(title: 'Edit'));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                  ),
-                  child: const Text("Edit"),
-                ),
-              ],
+              child: Text("View all ",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: Responsive.isMobile(context) ? 50.sp : 16.sp,
+                  )),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ class ApiConstants {
   static const String groupsChannel = "/groups";
 
   static const String channels = "/channels";
+  static const String addChannel = "/addChannel";
   static const String group = "/group";
   static const String categories = "/categories";
 }

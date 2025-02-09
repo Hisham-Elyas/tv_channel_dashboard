@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import '../../app_color.dart';
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
 import '../Channels/video_player_screen.dart';
+import '../Channels/video_player_web_screen.dart';
 import '../widget/menu/home_nav_bar.dart';
 import 'controllers/categorie_details_controller.dart';
 import 'data/models/category_channels_model.dart';
@@ -33,18 +35,18 @@ class CategorieDetailsScreen extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   color: AppColor.mainGrey,
-                  child: Row(
+                  child: const Row(
                     children: [
-                      const Text(
+                      Text(
                         "All Categories",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add),
-                      ),
+                      // const Spacer(),
+                      // IconButton(
+                      //   onPressed: () {},
+                      //   icon: const Icon(Icons.add),
+                      // ),
                     ],
                   ),
                 ),
@@ -83,10 +85,10 @@ class CategorieDetailsScreen extends StatelessWidget {
                             : LayoutBuilder(
                                 builder: (context, constraints) {
                                   int columns = constraints.maxWidth > 900
-                                      ? 3
+                                      ? 5
                                       : constraints.maxWidth > 600
-                                          ? 2
-                                          : 1;
+                                          ? 3
+                                          : 2;
 
                                   return GridView.builder(
                                     gridDelegate:
@@ -136,21 +138,22 @@ class ChannelsCardWidget extends StatelessWidget {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(Responsive.isMobile(context) ? 5.dm : 8.0.dm),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                channels.name,
-                style: const TextStyle(
-                  fontSize: 16,
+                channels.customName,
+                style: TextStyle(
+                  fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp,
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: Responsive.isMobile(context) ? 2.h : 8.h),
               CachedNetworkImage(
+                width: 150.w,
                 fit: BoxFit.contain,
                 imageUrl: channels.tvgLogo,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -162,29 +165,57 @@ class ChannelsCardWidget extends StatelessWidget {
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: Responsive.isMobile(context) ? 0 : 8.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Get.to(() => VideoPlayerScreen(
-                            videoUrl: channels.url,
-                          ));
+                      if (kIsWeb) {
+                        Get.to(() => VideoPlayerWeb(
+                              videoUrl: channels.url,
+                            ));
+                      } else {
+                        Get.to(() => VideoPlayerScreen(
+                              videoUrl: channels.url,
+                            ));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
+                      minimumSize: Responsive.isMobile(context)
+                          ? const Size(70, 25)
+                          : null,
+                      padding: Responsive.isMobile(context)
+                          ? const EdgeInsets.all(0)
+                          : null,
                     ),
-                    child: const Text("Play"),
+                    child: Text("Play",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize:
+                              Responsive.isMobile(context) ? 45.sp : 16.sp,
+                        )),
                   ),
-                  SizedBox(width: 8.h),
+                  SizedBox(width: 15.w),
                   FittedBox(
                     child: ElevatedButton(
                       onPressed: onPressedDelete,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
+                        minimumSize: Responsive.isMobile(context)
+                            ? const Size(70, 25)
+                            : null,
+                        padding: Responsive.isMobile(context)
+                            ? const EdgeInsets.all(0)
+                            : null,
                       ),
-                      child: const Text("Delete"),
+                      child: Text("Delete",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize:
+                                Responsive.isMobile(context) ? 45.sp : 16.sp,
+                          )),
                     ),
                   ),
                 ],

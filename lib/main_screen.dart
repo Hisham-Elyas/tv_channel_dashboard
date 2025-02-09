@@ -13,6 +13,8 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(PagesController());
+    // Get.put(CategoryController());
+    // Get.put(GroupsChannelController());
     return Scaffold(
         appBar: Responsive.isDesktop(context)
             ? null

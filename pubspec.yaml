@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^3.4.1
   modern_player: ^0.1.0
   flutter_vlc_player_platform_interface: ^2.0.3
+  flutter_inappwebview: ^6.1.5
 
 dev_dependencies:
   flutter_test:

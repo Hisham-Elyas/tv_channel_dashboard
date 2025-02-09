@@ -16,7 +16,9 @@ abstract class CategoryRepo {
   Future<bool> deleteCategory({required int categoryId});
   Future createCategory({required String name});
   Future<bool> addChannelToCategory(
-      {required int categoryId, required int channelId});
+      {required int categoryId,
+      required int channelId,
+      required String channelName});
   Future<bool> removeChannelFromCategory(
       {required int categoryId, required int channelId});
   Future getAllChannelInCategoryById({required int categoryId});
@@ -113,11 +115,15 @@ class CategoryRepoImpHttp implements CategoryRepo {
 
   @override
   Future<bool> addChannelToCategory(
-      {required int categoryId, required int channelId}) async {
+      {required int categoryId,
+      required int channelId,
+      required String channelName}) async {
     if (await checkInternet()) {
       try {
         final result = await categoryRemote.addChannelToCategory(
-            categoryId: categoryId, channelId: channelId);
+            categoryId: categoryId,
+            channelId: channelId,
+            channelName: channelName);
 
         log('TO Server  ==> Add Channel To Category');
 

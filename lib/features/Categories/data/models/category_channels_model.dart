@@ -5,6 +5,7 @@ class Channel {
   final String tvgName;
   final String tvgLogo;
   final String name;
+  final String customName;
   final String url;
   final DateTime createdAt;
 
@@ -15,6 +16,7 @@ class Channel {
     required this.tvgName,
     required this.tvgLogo,
     required this.name,
+    required this.customName,
     required this.url,
     required this.createdAt,
   });
@@ -26,7 +28,8 @@ class Channel {
       tvgId: json['tvg_id'],
       tvgName: json['tvg_name'],
       tvgLogo: json['tvg_logo'],
-      name: json['name'],
+      name: json['name'] ?? '',
+      customName: json['customName'] ?? '',
       url: json['url'],
       createdAt: DateTime.parse(json['created_at']),
     );
@@ -40,6 +43,7 @@ class Channel {
       'tvg_name': tvgName,
       'tvg_logo': tvgLogo,
       'name': name,
+      'customName': customName,
       'url': url,
       'created_at': createdAt.toIso8601String(),
     };
