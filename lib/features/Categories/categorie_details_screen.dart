@@ -6,17 +6,16 @@ import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../app_color.dart';
-import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
 import '../Channels/video_player_screen.dart';
 import '../Channels/video_player_web_screen.dart';
 import '../widget/menu/home_nav_bar.dart';
 import 'controllers/categorie_details_controller.dart';
-import 'data/models/category_channels_model.dart';
+import 'data/models/category_whith_channel_model.dart';
 
 class CategorieDetailsScreen extends StatelessWidget {
-  final int categorieId;
-  const CategorieDetailsScreen({super.key, required this.categorieId});
+  final CategoryWithChannels category;
+  const CategorieDetailsScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +34,11 @@ class CategorieDetailsScreen extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   color: AppColor.mainGrey,
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        "All Categories",
-                        style: TextStyle(
+                        "${category.categoryName} Categories",
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       // const Spacer(),
@@ -53,66 +52,40 @@ class CategorieDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Expanded(
                   child: GetBuilder<CategorieDetailsController>(
-                    builder: (controller) => controller.statusReq ==
-                            StatusRequest.loading
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : controller.statusReq == StatusRequest.serverFailure
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Please_try_agein_later",
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          controller.getAllchannelsInCategorys(
-                                              categoryId: controller
-                                                  .categoryChannels.categoryId);
-                                        },
-                                        child: const Text("TryAgain"))
-                                  ],
-                                ),
-                              )
-                            : LayoutBuilder(
-                                builder: (context, constraints) {
-                                  int columns = constraints.maxWidth > 900
-                                      ? 5
-                                      : constraints.maxWidth > 600
-                                          ? 3
-                                          : 2;
+                    builder: (controller) => LayoutBuilder(
+                      builder: (context, constraints) {
+                        int columns = constraints.maxWidth > 900
+                            ? 5
+                            : constraints.maxWidth > 600
+                                ? 3
+                                : 2;
 
-                                  return GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: columns,
-                                      crossAxisSpacing: 16,
-                                      mainAxisSpacing: 16,
-                                      childAspectRatio: 1.5,
-                                    ),
-                                    itemCount: controller.channels.length,
-                                    itemBuilder: (context, index) {
-                                      return ChannelsCardWidget(
-                                          onPressedDelete: () {
-                                            controller
-                                                .removeChannelFromCategory(
-                                                    channelId: controller
-                                                        .channels[index].id,
-                                                    categoryId: categorieId);
-                                          },
-                                          channels: controller.channels[index]);
-                                    },
-                                  );
+                        return category.channels.isEmpty
+                            ? const Center(
+                                child: Text('No Channels available'),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: columns,
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                  childAspectRatio: 1.5,
+                                ),
+                                itemCount: category.channels.length,
+                                itemBuilder: (context, index) {
+                                  return ChannelsCardWidget(
+                                      onPressedDelete: () {
+                                        controller.removeChannelFromCategory(
+                                            channelId:
+                                                category.channels[index].id,
+                                            categoryId: category.categoryId);
+                                      },
+                                      channels: category.channels[index]);
                                 },
-                              ),
+                              );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -161,7 +134,8 @@ class ChannelsCardWidget extends StatelessWidget {
                   enableSwitchAnimation: true,
                   enabled: true,
                   child: Skeleton.shade(
-                      child: Icon(Icons.live_tv_outlined, size: 150.dm)),
+                      child: Icon(Icons.live_tv_outlined,
+                          size: Responsive.isMobile(context) ? 50.dm : 100.dm)),
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

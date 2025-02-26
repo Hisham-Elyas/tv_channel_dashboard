@@ -71,7 +71,9 @@ class ChannelScreen extends StatelessWidget {
                                       Text(
                                         "Please_try_agein_later",
                                         style: TextStyle(
-                                          fontSize: 18.sp,
+                                          fontSize: Responsive.isMobile(context)
+                                              ? 50.sp
+                                              : 18.sp,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSurface,
@@ -170,6 +172,8 @@ class ChannelCardWidget extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    // print(channel.toString());
+                    // return;
                     if (kIsWeb) {
                       Get.to(() => VideoPlayerWeb(
                             videoUrl: channel.url,

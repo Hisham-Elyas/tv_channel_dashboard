@@ -58,10 +58,14 @@ class ApiClent extends GetConnect implements GetxService {
     }
   }
 
-  Future<Response> deleteData({required String uri}) async {
+  Future<Response> deleteData({required String uri, dynamic body}) async {
     try {
       // await Future.delayed(const Duration(seconds: 5)); // used in llocalhost
-      Response response = await delete(uri);
+      Response response = await request(
+        uri,
+        "DELETE",
+        body: body, // ✅ Send body with DELETE request
+      );
       // print(response.toString());
       return response;
     } catch (e) {

@@ -8,10 +8,13 @@ import '../../../../core/helpers/snackbar_error_message.dart';
 import '../../../../core/networking/exception.dart';
 import '../models/category_channels_model.dart';
 import '../models/category_model.dart';
+import '../models/category_whith_channel_model.dart';
 import '../remote/category_channel_remote_data.dart';
 
 abstract class CategoryRepo {
   Future getAllCategory();
+  Future<Either<StatusRequest, List<CategoryWithChannels>>>
+      getAllCategorywithChannel();
 
   Future<bool> deleteCategory({required int categoryId});
   Future createCategory({required String name});
@@ -19,6 +22,15 @@ abstract class CategoryRepo {
       {required int categoryId,
       required int channelId,
       required String channelName});
+  Future<bool> addLinkeToChannelInCategory(
+      {required int categoryId,
+      required int channelId,
+      required String linkName,
+      required String linkUrl});
+  Future<bool> removeLinkInChannelInCategory(
+      {required int categoryId,
+      required int channelId,
+      required String linkUrl});
   Future<bool> removeChannelFromCategory(
       {required int categoryId, required int channelId});
   Future getAllChannelInCategoryById({required int categoryId});
@@ -30,6 +42,7 @@ class CategoryRepoImpHttp implements CategoryRepo {
   final CategoryRemoteDateImplHttp categoryRemote;
 
   CategoryRepoImpHttp({required this.categoryRemote});
+
   @override
   Future<Either<StatusRequest, List<Category>>> getAllCategory() async {
     if (await checkInternet()) {
@@ -37,6 +50,27 @@ class CategoryRepoImpHttp implements CategoryRepo {
         final remotData = await categoryRemote.getAllCategory();
 
         log('from Server  ==>  Get All Category');
+
+        return right(remotData);
+      } on ServerException catch (e) {
+        showErrorMessage(e.message);
+
+        return left(StatusRequest.serverFailure);
+      }
+    } else {
+      showNetworkError();
+      return left(StatusRequest.serverFailure);
+    }
+  }
+
+  @override
+  Future<Either<StatusRequest, List<CategoryWithChannels>>>
+      getAllCategorywithChannel() async {
+    if (await checkInternet()) {
+      try {
+        final remotData = await categoryRemote.getAllCategorywithChannel();
+
+        log('from Server  ==>  Get All Category With Channels');
 
         return right(remotData);
       } on ServerException catch (e) {
@@ -173,6 +207,62 @@ class CategoryRepoImpHttp implements CategoryRepo {
         return result;
       } on ServerException catch (e) {
         showErrorMessage(e.message);
+        return false;
+      }
+    } else {
+      showNetworkError();
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> addLinkeToChannelInCategory(
+      {required int categoryId,
+      required int channelId,
+      required String linkName,
+      required String linkUrl}) async {
+    if (await checkInternet()) {
+      try {
+        final result = await categoryRemote.addLinkeToChannelInCategory(
+          categoryId: categoryId,
+          channelId: channelId,
+          linkName: linkName,
+          linkUrl: linkUrl,
+        );
+
+        log('TO Server  ==>  add Linke To Channel In Category');
+
+        return result;
+      } on ServerException catch (e) {
+        showErrorMessage(e.message);
+
+        return false;
+      }
+    } else {
+      showNetworkError();
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> removeLinkInChannelInCategory(
+      {required int categoryId,
+      required int channelId,
+      required String linkUrl}) async {
+    if (await checkInternet()) {
+      try {
+        final result = await categoryRemote.removeLinkInChannelInCategory(
+          categoryId: categoryId,
+          channelId: channelId,
+          linkUrl: linkUrl,
+        );
+
+        log('TO Server  ==>  remove Link In Channel In Category');
+
+        return result;
+      } on ServerException catch (e) {
+        showErrorMessage(e.message);
+
         return false;
       }
     } else {

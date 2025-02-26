@@ -6,6 +6,15 @@ class ApiConstants {
   static const String addChannel = "/addChannel";
   static const String group = "/group";
   static const String categories = "/categories";
+  static const String channelLink = "/channel/link";
+  static const String todayMatches = "/today_matches";
+  static const String allCategoriesWithChannels = "/all-with-channels";
+
+  /// settings
+  static const String settings = "/settings";
+  static const String addSettings = "/add";
+  static const String setAllowUse = "/set-allow-use";
+  static const String getAllSettings = "/get-all-settings";
 }
 
 class ApiErrors {

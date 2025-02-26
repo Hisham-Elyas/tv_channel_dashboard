@@ -9,9 +9,8 @@ import '../../responsive.dart';
 import '../widget/menu/home_nav_bar.dart';
 import 'add_category_screen.dart';
 import 'categorie_details_screen.dart';
-import 'controllers/categorie_details_controller.dart';
 import 'controllers/category_controller.dart';
-import 'data/models/category_model.dart';
+import 'data/models/category_whith_channel_model.dart';
 import 'edit_category_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -71,7 +70,9 @@ class CategoriesScreen extends StatelessWidget {
                                     Text(
                                       "Please_try_agein_later",
                                       style: TextStyle(
-                                        fontSize: 18.sp,
+                                        fontSize: Responsive.isMobile(context)
+                                            ? 50.sp
+                                            : 18.sp,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onSurface,
@@ -79,7 +80,8 @@ class CategoriesScreen extends StatelessWidget {
                                     ),
                                     ElevatedButton(
                                         onPressed: () {
-                                          controller.getAllCategorys();
+                                          controller
+                                              .getAllCategorysWithChannel();
                                         },
                                         child: const Text("TryAgain"))
                                   ],
@@ -88,10 +90,10 @@ class CategoriesScreen extends StatelessWidget {
                             : LayoutBuilder(
                                 builder: (context, constraints) {
                                   int columns = constraints.maxWidth > 900
-                                      ? 3
+                                      ? 5
                                       : constraints.maxWidth > 600
-                                          ? 2
-                                          : 1;
+                                          ? 3
+                                          : 2;
 
                                   return GridView.builder(
                                     gridDelegate:
@@ -101,36 +103,46 @@ class CategoriesScreen extends StatelessWidget {
                                       mainAxisSpacing: 16,
                                       childAspectRatio: 1.5,
                                     ),
-                                    itemCount: controller.categorys.length,
+                                    itemCount:
+                                        controller.categorysWithChannel.length,
                                     itemBuilder: (context, index) {
                                       return CategoriesCardWidget(
                                           onPressedEdit: () {
                                             Get.to(() => EditCategoryScreen(
                                                   categoryId: controller
-                                                      .categorys[index].id,
+                                                      .categorysWithChannel[
+                                                          index]
+                                                      .categoryId,
                                                   categoryName: controller
-                                                      .categorys[index].name,
+                                                      .categorysWithChannel[
+                                                          index]
+                                                      .categoryName,
                                                 ));
                                           },
                                           onPressedDelete: () {
                                             controller.deleteCategory(
                                                 categoryId: controller
-                                                    .categorys[index].id);
+                                                    .categorysWithChannel[index]
+                                                    .categoryId);
                                           },
                                           onTap: () {
-                                            CategorieDetailsController
-                                                categorieDetailsController =
-                                                Get.find();
-                                            categorieDetailsController
-                                                .getAllchannelsInCategorys(
-                                                    categoryId: controller
-                                                        .categorys[index].id);
+                                            // CategorieDetailsController
+                                            //     categorieDetailsController =
+                                            //     Get.find();
+                                            // categorieDetailsController
+                                            //     .getAllchannelsInCategorys(
+                                            //         categoryId: controller
+                                            //             .categorysWithChannel[
+                                            //                 index]
+                                            //             .categoryId);
+
                                             Get.to(() => CategorieDetailsScreen(
-                                                categorieId: controller
-                                                    .categorys[index].id));
+                                                category: controller
+                                                        .categorysWithChannel[
+                                                    index]));
                                           },
-                                          category:
-                                              controller.categorys[index]);
+                                          category: controller
+                                              .categorysWithChannel[index]);
                                     },
                                   );
                                 },
@@ -147,7 +159,7 @@ class CategoriesScreen extends StatelessWidget {
 }
 
 class CategoriesCardWidget extends StatelessWidget {
-  final Category category;
+  final CategoryWithChannels category;
   final void Function()? onTap;
   final void Function()? onPressedDelete;
   final void Function()? onPressedEdit;
@@ -166,28 +178,28 @@ class CategoriesCardWidget extends StatelessWidget {
       child: Card(
         elevation: 4,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(Responsive.isMobile(context) ? 7.dm : 8.0.dm),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  category.name,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  category.categoryName,
+                  style: TextStyle(
+                    fontSize: Responsive.isMobile(context) ? 65.sp : 16.sp,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  category.channels.toString(),
-                  style: const TextStyle(
-                    fontSize: 16,
+                  category.channels.length.toString(),
+                  style: TextStyle(
+                    fontSize: Responsive.isMobile(context) ? 80.sp : 28,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: Responsive.isMobile(context) ? 5.h : 50.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -195,19 +207,41 @@ class CategoriesCardWidget extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: onPressedEdit,
                         style: ElevatedButton.styleFrom(
+                          minimumSize: Responsive.isMobile(context)
+                              ? const Size(70, 25)
+                              : null,
+                          padding: Responsive.isMobile(context)
+                              ? const EdgeInsets.all(0)
+                              : null,
                           backgroundColor: Colors.blue,
                         ),
-                        child: const Text("Edit"),
+                        child: Text("Edit",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  Responsive.isMobile(context) ? 45.sp : 16.sp,
+                            )),
                       ),
                     ),
-                    SizedBox(width: 20.h),
+                    SizedBox(width: Responsive.isMobile(context) ? 10.h : 20.h),
                     FittedBox(
                       child: ElevatedButton(
                         onPressed: onPressedDelete,
                         style: ElevatedButton.styleFrom(
+                          minimumSize: Responsive.isMobile(context)
+                              ? const Size(70, 25)
+                              : null,
+                          padding: Responsive.isMobile(context)
+                              ? const EdgeInsets.all(0)
+                              : null,
                           backgroundColor: Colors.red,
                         ),
-                        child: const Text("Delete"),
+                        child: Text("Delete",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  Responsive.isMobile(context) ? 45.sp : 16.sp,
+                            )),
                       ),
                     ),
                   ],

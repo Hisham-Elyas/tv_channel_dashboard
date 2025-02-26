@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../app_color.dart';
 import '../../../page_controller.dart';
+import '../../../responsive.dart';
 import '../logo_card_widget.dart';
 
 class SideMenuSection extends StatelessWidget {
@@ -41,6 +42,7 @@ class SideMenuSection extends StatelessWidget {
                           numTap: controller.pageNum == index,
                           onPressed: () {
                             controller.goToPage(index);
+                            Scaffold.of(context).closeEndDrawer();
                           },
                         ),
                       )),
@@ -73,7 +75,7 @@ class SideMenuButton extends StatelessWidget {
             text,
             style: TextStyle(
                 color: numTap ? AppColor.mainBlack : AppColor.fontColor1,
-                fontSize: 24.sp,
+                fontSize: Responsive.isMobile(context) ? 50.sp : 24.sp,
                 fontWeight: FontWeight.bold),
           ),
         ));

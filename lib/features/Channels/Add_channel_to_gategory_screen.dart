@@ -6,7 +6,7 @@ import '../../app_color.dart';
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
 import '../Categories/controllers/category_controller.dart';
-import '../Categories/data/models/category_model.dart';
+import '../Categories/data/models/category_whith_channel_model.dart';
 import '../widget/custom_buttom_widget.dart';
 import '../widget/custom_text_form_field_widget.dart';
 import '../widget/menu/home_nav_bar.dart';
@@ -52,7 +52,7 @@ class AddChannelToGategory extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
-                                      controller.getAllCategorys();
+                                      controller.getAllCategorysWithChannel();
                                     },
                                     child: const Text("TryAgain"))
                               ],
@@ -86,56 +86,81 @@ class AddChannelToGategory extends StatelessWidget {
                                   hintText: "Channel Name",
                                 ),
                                 SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "Channel Description",
-                                //   maxLines: 2,
-                                // ),
-                                // SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "Live Url",
-                                // ),
-                                // SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "Thumbnail",
-                                // ),
-                                // SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "Facebook",
-                                // ),
-                                // SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "twitter",
-                                // ),
-                                // SizedBox(height: 10.h),
-                                // const CustomTextFormField(
-                                //   hintText: "Website",
-                                // ),
-                                // SizedBox(height: 10.h),
                                 DropdownButtonHideUnderline(
-                                  child: DropdownButton<Category>(
+                                  child: DropdownButton<CategoryWithChannels>(
                                     value: controller.selectedCategory,
                                     hint: const Text("Select a Category"),
                                     isExpanded: true,
-                                    items: controller.categorys.map((category) {
+                                    items: controller.categorysWithChannel
+                                        .map((category) {
                                       return DropdownMenuItem(
                                         value: category,
-                                        child: Text(category.name),
+                                        child: Text(category.categoryName),
                                       );
                                     }).toList(),
-                                    onChanged: (Category? newValue) {
+                                    onChanged:
+                                        (CategoryWithChannels? newValue) {
                                       controller.selectedCategory = newValue;
+                                      if (controller.isAddlink) {
+                                        controller.isAddlink = false;
+                                      }
+
                                       controller.update();
                                     },
                                   ),
                                 ),
-
                                 SizedBox(height: 10.h),
+                                SwitchListTile(
+                                  title: const Text('add only Link as Quality'),
+                                  subtitle: const Text(
+                                      'add only Link to Channel in Category (Quality)'),
+                                  value: controller.isAddlink,
+                                  onChanged: (value) {
+                                    controller.isAddlinkSwitch(value);
+                                  },
+                                ),
+                                SizedBox(height: 10.h),
+                                Visibility(
+                                    visible: controller.isAddlink,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 10.h),
+                                        DropdownButtonHideUnderline(
+                                          child: DropdownButton<Channel>(
+                                            value: controller.selectedChannel,
+                                            hint:
+                                                const Text("Select a Channel"),
+                                            isExpanded: true,
+                                            items: controller
+                                                .channelsOfSelectedCategory
+                                                .map((channels) {
+                                              return DropdownMenuItem(
+                                                value: channels,
+                                                child:
+                                                    Text(channels.customName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (Channel? newValue) {
+                                              controller.selectedChannel =
+                                                  newValue;
+                                              controller.update();
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                SizedBox(height: 40.h),
                                 CustomButtom(
                                     height: 88.h,
                                     color: AppColor.mainColor,
                                     onTap: () {
-                                      controller.addChannelToCategory(
-                                          channel: channel);
+                                      if (controller.isAddlink) {
+                                        controller.addLinkeToChannelInCategory(
+                                            channel: channel);
+                                      } else {
+                                        controller.addChannelToCategory(
+                                            channel: channel);
+                                      }
                                     },
                                     title: "Submit")
                               ],

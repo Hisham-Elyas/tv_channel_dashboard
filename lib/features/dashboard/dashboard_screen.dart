@@ -28,10 +28,10 @@ class DashboardScreen extends StatelessWidget {
                 builder: (context, constraints) {
                   // Determine the number of columns based on screen width
                   int columns = constraints.maxWidth > 900
-                      ? 3
+                      ? 5
                       : constraints.maxWidth > 600
-                          ? 2
-                          : 1;
+                          ? 3
+                          : 2;
 
                   return GetBuilder<CategoryController>(
                     builder: (categoryController) =>
@@ -54,7 +54,10 @@ class DashboardScreen extends StatelessWidget {
                                           Text(
                                             "Please_try_agein_later",
                                             style: TextStyle(
-                                              fontSize: 18.sp,
+                                              fontSize:
+                                                  Responsive.isMobile(context)
+                                                      ? 50.sp
+                                                      : 18.sp,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onSurface,
@@ -72,7 +75,7 @@ class DashboardScreen extends StatelessWidget {
                                                         StatusRequest
                                                             .serverFailure) {
                                                   categoryController
-                                                      .getAllCategorys();
+                                                      .getAllCategorysWithChannel();
                                                   groupsChannelController
                                                       .getAllGroupsChannel();
                                                 } else {
@@ -89,7 +92,7 @@ class DashboardScreen extends StatelessWidget {
                                                       StatusRequest
                                                           .serverFailure) {
                                                     categoryController
-                                                        .getAllCategorys();
+                                                        .getAllCategorysWithChannel();
                                                   }
                                                 }
                                               },
@@ -101,23 +104,25 @@ class DashboardScreen extends StatelessWidget {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: columns,
-                                        crossAxisSpacing: 2,
-                                        mainAxisSpacing: 2,
+                                        crossAxisSpacing: 16,
+                                        mainAxisSpacing: 16,
+                                        childAspectRatio: 1.5,
                                       ),
-                                      itemCount: 3,
+                                      itemCount: 2,
                                       itemBuilder: (context, index) {
                                         final titles = [
                                           "Groups Channel",
                                           "Categories",
-                                          "Users"
+                                          // "Users"
                                         ];
                                         final counts = [
                                           groupsChannelController
                                               .groupsChannel.length
                                               .toString(),
-                                          categoryController.categorys.length
+                                          categoryController
+                                              .categorysWithChannel.length
                                               .toString(),
-                                          "5437"
+                                          // "5437"
                                         ];
                                         return DashboardCardWidget(
                                           title: titles[index],
@@ -163,27 +168,37 @@ class DashboardCardWidget extends StatelessWidget {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(Responsive.isMobile(context) ? 5.dm : 8.0.dm),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp,
+                  fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
             Text(
               count,
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: Responsive.isMobile(context) ? 80.sp : 28,
+                  fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
+                minimumSize:
+                    Responsive.isMobile(context) ? const Size(70, 25) : null,
+                padding: Responsive.isMobile(context)
+                    ? const EdgeInsets.all(0)
+                    : null,
               ),
-              child:
-                  const Text("View all", style: TextStyle(color: Colors.white)),
+              child: Text("View all",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp,
+                  )),
             ),
           ],
         ),

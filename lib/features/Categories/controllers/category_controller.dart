@@ -5,37 +5,85 @@ import '../../../core/helpers/coustom_overlay.dart';
 import '../../../core/helpers/enums.dart';
 import '../../../core/widgets/custom_snackbar.dart';
 import '../../Channels/data/models/channel_model.dart';
-import '../data/models/category_model.dart';
+// import '../data/models/category_channels_model.dart';
+// import '../data/models/category_model.dart';
+import '../data/models/category_whith_channel_model.dart';
 import '../data/repos/category_repo.dart';
+import 'categorie_details_controller.dart';
 
 class CategoryController extends GetxController {
   final CategoryRepoImpHttp categoryRepo = Get.find();
   final GlobalKey<FormState> channelformKey = GlobalKey();
+  CategorieDetailsController categorieDetailsController = Get.find();
+
+  bool isAddlink = false;
 
   late StatusRequest statusReq;
-  Category? selectedCategory;
+  CategoryWithChannels? selectedCategory;
+  Channel? selectedChannel;
   String? channelName;
-  List<Category> categorys = [];
+  List<Channel> channelsOfSelectedCategory = [];
+  // List<Category> categorys = [];
+
+  List<CategoryWithChannels> categorysWithChannel = [];
+  CategoryWithChannels get getCategoryById {
+    if (selectedCategory == null) return categorysWithChannel.first;
+    return categorysWithChannel.firstWhere(
+        (element) => element.categoryId == selectedCategory?.categoryId);
+  }
 
   @override
   void onInit() {
-    getAllCategorys();
+    // getAllCategorys();
+    getAllCategorysWithChannel();
     super.onInit();
   }
 
-  Future<void> getAllCategorys() async {
+  Future<void> getAllCategorysWithChannel() async {
     statusReq = StatusRequest.loading;
     update();
-    final resalt = await categoryRepo.getAllCategory();
+    final resalt = await categoryRepo.getAllCategorywithChannel();
     resalt.fold((l) {
       statusReq = l;
       update();
     }, (r) {
-      categorys = r;
+      categorysWithChannel = r;
       statusReq = StatusRequest.success;
       update();
     });
   }
+
+  isAddlinkSwitch(val) {
+    if (selectedCategory == null) {
+      showCustomSnackBar(
+          message: "Please select a category.".tr,
+          title: "Add Link to Channel In Category".tr,
+          isError: true);
+      return;
+    }
+    // categorieDetailsController.getAllchannelsInCategorys(
+    //     categoryId: selectedCategory!.categoryId);
+    isAddlink = val;
+    channelsOfSelectedCategory = categorysWithChannel
+        .firstWhere(
+            (element) => element.categoryId == selectedCategory?.categoryId)
+        .channels;
+    update();
+  }
+
+  // Future<void> getAllCategorys() async {
+  //   statusReq = StatusRequest.loading;
+  //   update();
+  //   final resalt = await categoryRepo.getAllCategory();
+  //   resalt.fold((l) {
+  //     statusReq = l;
+  //     update();
+  //   }, (r) {
+  //     categorys = r;
+  //     statusReq = StatusRequest.success;
+  //     update();
+  //   });
+  // }
 
   Future<void> addChannelToCategory({required ChannelModel channel}) async {
     Get.focusScope!.unfocus();
@@ -55,7 +103,7 @@ class CategoryController extends GetxController {
     await showOverlay(
       asyncFunction: () async {
         resalt = await categoryRepo.addChannelToCategory(
-            categoryId: selectedCategory!.id,
+            categoryId: selectedCategory!.categoryId,
             channelId: channel.id,
             channelName: channelName!);
       },
@@ -64,8 +112,43 @@ class CategoryController extends GetxController {
       Get.back();
       showCustomSnackBar(
         message:
-            "Successfully Add $channelName To ${selectedCategory!.name} ✅".tr,
+            "Successfully Add $channelName To ${selectedCategory!.categoryName} ✅"
+                .tr,
         title: "Add Channel To Category".tr,
+      );
+    }
+  }
+
+  Future<void> addLinkeToChannelInCategory(
+      {required ChannelModel channel}) async {
+    Get.focusScope!.unfocus();
+    if (!channelformKey.currentState!.validate()) {
+      // Invalid!
+      return;
+    }
+    channelformKey.currentState!.save();
+    if (selectedCategory == null) {
+      showCustomSnackBar(
+          message: "Please select a category.".tr,
+          title: "Add Channel To Category".tr,
+          isError: true);
+      return;
+    }
+    late bool resalt;
+    await showOverlay(
+      asyncFunction: () async {
+        resalt = await categoryRepo.addLinkeToChannelInCategory(
+            categoryId: selectedCategory!.categoryId,
+            channelId: selectedChannel!.id,
+            linkName: channelName!,
+            linkUrl: channel.url);
+      },
+    );
+    if (resalt == true) {
+      Get.back();
+      showCustomSnackBar(
+        message: "Successfully Add $channelName Link ✅".tr,
+        title: "Add Link to Channel In Category".tr,
       );
     }
   }
@@ -78,7 +161,7 @@ class CategoryController extends GetxController {
       },
     );
     if (resalt == true) {
-      getAllCategorys();
+      getAllCategorysWithChannel();
     }
   }
 

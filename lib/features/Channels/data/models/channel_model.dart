@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class ChannelModelListModel {
   final int groupId;
   final String groupName;
@@ -78,5 +79,10 @@ class ChannelModel {
       'url': url,
       'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  @override
+  String toString() {
+    return 'ChannelModel(id: $id, groupId: $groupId, tvgId: $tvgId, tvgName: $tvgName, tvgLogo: $tvgLogo, name: $name, url: $url, createdAt: $createdAt)';
   }
 }

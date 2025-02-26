@@ -26,7 +26,7 @@ class CreateCategoryController extends GetxController {
         resalt = await categoryRepo.createCategory(name: categoryName);
         if (resalt == true) {
           CategoryController categoryController = Get.find();
-          categoryController.getAllCategorys();
+          categoryController.getAllCategorysWithChannel();
           Get.back();
         }
       },
@@ -49,7 +49,7 @@ class CreateCategoryController extends GetxController {
             categoryId: categoryId, newName: categoryName);
         if (resalt == true) {
           CategoryController categoryController = Get.find();
-          categoryController.getAllCategorys();
+          categoryController.getAllCategorysWithChannel();
           Get.back();
         }
       },
@@ -59,8 +59,6 @@ class CreateCategoryController extends GetxController {
   String? categoryNamevalidator(val) {
     if (val.isEmpty) {
       return "Type_your_Category_Name".tr;
-    } else if (val.length < 4) {
-      return "category_can_not_be_less_than_4_characters".tr;
     } else {
       return null;
     }

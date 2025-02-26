@@ -9,6 +9,9 @@ import '../../features/Channels/controllers/channel_controller.dart';
 import '../../features/Channels/controllers/groups_channel_controller.dart';
 import '../../features/Channels/data/remote/group_channel_remote_date.dart';
 import '../../features/Channels/data/repos/group_channel_repo.dart';
+import '../../features/sittings/controllers/setting_controller.dart';
+import '../../features/sittings/data/remote/setting_remote_data.dart';
+import '../../features/sittings/data/repos/setting_repo.dart';
 import '../../page_controller.dart';
 import '../networking/api_client.dart';
 
@@ -51,4 +54,14 @@ Future<void> setupGetIt() async {
   Get.lazyPut(() => CategoryController(), fenix: true);
   Get.lazyPut(() => CategorieDetailsController(), fenix: true);
   Get.lazyPut(() => CreateCategoryController(), fenix: true);
+
+  Get.lazyPut(() => SettingsRemoteDataImplHttp(apiClent: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => SettingRepoImpHttp(settingRemoteData: Get.find()),
+      fenix: true);
+
+  Get.put(PagesController());
+  Get.put(CategoryController());
+  Get.put(GroupsChannelController());
+  Get.put(SettingController());
 }
