@@ -66,8 +66,13 @@ class CategoryController extends GetxController {
     isAddlink = val;
     channelsOfSelectedCategory = categorysWithChannel
         .firstWhere(
-            (element) => element.categoryId == selectedCategory?.categoryId)
+            (element) => element.categoryId == selectedCategory!.categoryId)
         .channels;
+    if (!channelsOfSelectedCategory.contains(selectedChannel)) {
+      selectedChannel = channelsOfSelectedCategory.isNotEmpty
+          ? channelsOfSelectedCategory.first
+          : null;
+    }
     update();
   }
 
@@ -110,12 +115,18 @@ class CategoryController extends GetxController {
     );
     if (resalt == true) {
       Get.back();
+      selectedCategory = null;
+      channelName = null;
+      isAddlink = false;
+      channelsOfSelectedCategory = [];
+
       showCustomSnackBar(
         message:
             "Successfully Add $channelName To ${selectedCategory!.categoryName} ✅"
                 .tr,
         title: "Add Channel To Category".tr,
       );
+      await getAllCategorysWithChannel();
     }
   }
 
@@ -150,6 +161,11 @@ class CategoryController extends GetxController {
         message: "Successfully Add $channelName Link ✅".tr,
         title: "Add Link to Channel In Category".tr,
       );
+      selectedCategory = null;
+      channelName = null;
+      isAddlink = false;
+      channelsOfSelectedCategory = [];
+      await getAllCategorysWithChannel();
     }
   }
 

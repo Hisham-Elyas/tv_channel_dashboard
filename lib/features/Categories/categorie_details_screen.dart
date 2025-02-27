@@ -68,13 +68,33 @@ class CategorieDetailsScreen extends StatelessWidget {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: columns,
-                                  crossAxisSpacing: 16,
-                                  mainAxisSpacing: 16,
-                                  childAspectRatio: 1.5,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5,
+                                  childAspectRatio: 1,
                                 ),
                                 itemCount: category.channels.length,
                                 itemBuilder: (context, index) {
                                   return ChannelsCardWidget(
+                                      onPressedEdit: () {
+                                        showChannelListDialog(
+                                            categoryId: category.categoryId,
+                                            context: context,
+                                            controller: controller,
+                                            channels: category.channels[index]);
+                                      },
+                                      onPressedPlay: () {
+                                        if (kIsWeb) {
+                                          Get.to(() => VideoPlayerWeb(
+                                                videoUrl: category
+                                                    .channels[index].url,
+                                              ));
+                                        } else {
+                                          Get.to(() => VideoPlayerScreen(
+                                                videoUrl: category
+                                                    .channels[index].url,
+                                              ));
+                                        }
+                                      },
                                       onPressedDelete: () {
                                         controller.removeChannelFromCategory(
                                             channelId:
@@ -100,10 +120,14 @@ class CategorieDetailsScreen extends StatelessWidget {
 class ChannelsCardWidget extends StatelessWidget {
   final Channel channels;
   final void Function()? onPressedDelete;
+  final void Function()? onPressedPlay;
+  final void Function()? onPressedEdit;
   const ChannelsCardWidget({
     super.key,
     required this.channels,
     this.onPressedDelete,
+    this.onPressedPlay,
+    this.onPressedEdit,
   });
 
   @override
@@ -144,17 +168,7 @@ class ChannelsCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      if (kIsWeb) {
-                        Get.to(() => VideoPlayerWeb(
-                              videoUrl: channels.url,
-                            ));
-                      } else {
-                        Get.to(() => VideoPlayerScreen(
-                              videoUrl: channels.url,
-                            ));
-                      }
-                    },
+                    onPressed: onPressedPlay,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       minimumSize: Responsive.isMobile(context)
@@ -194,10 +208,80 @@ class ChannelsCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
+              ElevatedButton(
+                onPressed: onPressedEdit,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  minimumSize:
+                      Responsive.isMobile(context) ? const Size(70, 25) : null,
+                  padding: Responsive.isMobile(context)
+                      ? const EdgeInsets.all(0)
+                      : null,
+                ),
+                child: Text("Edit",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp,
+                    )),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+void showChannelListDialog(
+    {required BuildContext context,
+    required int categoryId,
+    required Channel channels,
+    required CategorieDetailsController controller}) {
+  channels.urlList.removeWhere(
+    (element) {
+      return element.url == channels.url;
+    },
+  );
+  Get.dialog(
+    AlertDialog(
+      title: const Text("List Quality link"),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: channels.urlList.isEmpty
+            ? const Text("No link found")
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: channels.urlList.length,
+                itemBuilder: (context, index) {
+                  final channel = channels.urlList[index];
+
+                  return ListTile(
+                    title: Text(channel.name),
+                    subtitle: Text(
+                      channel.url,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        controller.removeLinkInChannelInCategory(
+                            categoryId: categoryId,
+                            channels: channels,
+                            linkUrl: channel.url);
+                      },
+                    ),
+                  );
+                },
+              ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Get.back(),
+          child: const Text("Close"),
+        ),
+      ],
+    ),
+  );
 }

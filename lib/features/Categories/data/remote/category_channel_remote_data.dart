@@ -150,7 +150,7 @@ class CategoryRemoteDateImplHttp implements CategoryRemoteDate {
 
         uri:
             '${ApiConstants.apiBaseUrl}${ApiConstants.categories}${ApiConstants.channelLink}');
-    if (resalt.statusCode == 201) {
+    if (resalt.statusCode == 200) {
       return true;
     } else {
       log(resalt.body.toString());
