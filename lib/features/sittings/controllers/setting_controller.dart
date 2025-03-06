@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../core/helpers/coustom_overlay.dart';
 import '../../../core/helpers/enums.dart';
+import '../../../core/widgets/custom_snackbar.dart';
 import '../data/models/iptv_config_model.dart';
 import '../data/repos/setting_repo.dart';
 
@@ -26,8 +27,11 @@ class SettingController extends GetxController {
     response.fold(
       (l) {
         statusReq = l;
+        showCustomSnackBar(
+            message: "Failed to fetch IPTV configurations",
+            isError: true,
+            title: "Error");
         update();
-        Get.snackbar("Error", "Failed to fetch IPTV configurations");
       },
       (r) {
         iptvConfigs = r;
@@ -43,7 +47,9 @@ class SettingController extends GetxController {
   }
 
   Future<void> updateConfig(int newId) async {
-    Get.snackbar("loading", "IPTV Configuration Updating");
+    showCustomSnackBar(
+        message: "FIPTV Configuration Updating", title: "loading");
+
     await showOverlay(
       asyncFunction: () async {
         final response = await settingRepo.setAllowUseIptvConfigSttingsUser(
@@ -57,9 +63,13 @@ class SettingController extends GetxController {
 
           selectedId = newId;
           update();
-          Get.snackbar("Success", "IPTV Configuration Updated");
+          showCustomSnackBar(
+              message: "IPTV Configuration Updated", title: "Success");
         } else {
-          Get.snackbar("Error", "Failed to update IPTV configuration");
+          showCustomSnackBar(
+              message: "Failed to update IPTV configuration",
+              title: "Error",
+              isError: true);
         }
       },
     );
@@ -73,9 +83,13 @@ class SettingController extends GetxController {
 
         if (response == true) {
           fetchConfigs(); // Refresh the list
-          Get.snackbar("Success", "New IPTV configuration added!");
+          showCustomSnackBar(
+              message: "New IPTV configuration added!", title: "Success");
         } else {
-          Get.snackbar("Error", "Failed to add IPTV configuration");
+          showCustomSnackBar(
+              message: "Failed to add IPTV configuration",
+              title: "Error",
+              isError: true);
         }
       },
     );

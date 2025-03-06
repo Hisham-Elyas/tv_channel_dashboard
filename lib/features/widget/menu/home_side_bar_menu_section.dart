@@ -14,7 +14,6 @@ class SideMenuSection extends StatelessWidget {
     'Channels',
     'Categories',
     'Settings',
-    'Logout',
   ];
   @override
   Widget build(BuildContext context) {

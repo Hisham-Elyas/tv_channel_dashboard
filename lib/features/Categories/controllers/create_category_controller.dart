@@ -9,6 +9,7 @@ class CreateCategoryController extends GetxController {
   final GlobalKey<FormState> categoryformKey = GlobalKey();
   late String categoryName;
   final CategoryRepoImpHttp categoryRepo = Get.find();
+  final     CategoryController categoryController = Get.find();
   // late StatusRequest statusReq;
 
   Future<void> createCategory() async {
@@ -25,7 +26,7 @@ class CreateCategoryController extends GetxController {
       asyncFunction: () async {
         resalt = await categoryRepo.createCategory(name: categoryName);
         if (resalt == true) {
-          CategoryController categoryController = Get.find();
+    
           categoryController.getAllCategorysWithChannel();
           Get.back();
         }
@@ -48,7 +49,6 @@ class CreateCategoryController extends GetxController {
         resalt = await categoryRepo.updateCategory(
             categoryId: categoryId, newName: categoryName);
         if (resalt == true) {
-          CategoryController categoryController = Get.find();
           categoryController.getAllCategorysWithChannel();
           Get.back();
         }

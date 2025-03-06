@@ -9,12 +9,10 @@ import '../../Channels/data/models/channel_model.dart';
 // import '../data/models/category_model.dart';
 import '../data/models/category_whith_channel_model.dart';
 import '../data/repos/category_repo.dart';
-import 'categorie_details_controller.dart';
 
 class CategoryController extends GetxController {
   final CategoryRepoImpHttp categoryRepo = Get.find();
   final GlobalKey<FormState> channelformKey = GlobalKey();
-  CategorieDetailsController categorieDetailsController = Get.find();
 
   bool isAddlink = false;
 

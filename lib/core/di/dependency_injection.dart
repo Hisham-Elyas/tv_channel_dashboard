@@ -55,13 +55,15 @@ Future<void> setupGetIt() async {
   Get.lazyPut(() => CategorieDetailsController(), fenix: true);
   Get.lazyPut(() => CreateCategoryController(), fenix: true);
 
+  Get.lazyPut(() => SettingController(), fenix: true);
   Get.lazyPut(() => SettingsRemoteDataImplHttp(apiClent: Get.find()),
       fenix: true);
   Get.lazyPut(() => SettingRepoImpHttp(settingRemoteData: Get.find()),
       fenix: true);
 
-  Get.put(PagesController());
   Get.put(CategoryController());
+  Get.put(CategorieDetailsController());
+  Get.put(PagesController());
   Get.put(GroupsChannelController());
   Get.put(SettingController());
 }
