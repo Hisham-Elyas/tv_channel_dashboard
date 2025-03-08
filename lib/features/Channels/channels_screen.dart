@@ -10,7 +10,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
 import '../widget/menu/home_nav_bar.dart';
-import 'Add_channel_to_gategory_screen.dart';
 import 'controllers/channel_controller.dart';
 import 'data/models/channel_model.dart';
 import 'data/models/group_channel_model.dart';
@@ -152,79 +151,91 @@ class ChannelCardWidget extends StatelessWidget {
                 ),
               ),
             ),
-            CachedNetworkImage(
-              width: 150.w,
-              // height: 150.h,
-              fit: BoxFit.contain,
-              imageUrl: channel.tvgLogo,
+            channel.tvgName.startsWith('#')
+                ? Text(
+                    "TV Group",
+                    style: TextStyle(
+                        fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp),
+                  )
+                : CachedNetworkImage(
+                    width: 150.w,
+                    // height: 150.h,
+                    fit: BoxFit.contain,
+                    imageUrl: channel.tvgLogo,
 
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Skeletonizer(
-                enableSwitchAnimation: true,
-                enabled: true,
-                child: Skeleton.shade(
-                    child: Icon(Icons.live_tv_outlined, size: 50.dm)),
-              ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // print(channel.toString());
-                    // return;
-                    if (kIsWeb) {
-                      Get.to(() => VideoPlayerWeb(
-                            videoUrl: channel.url,
-                          ));
-                    } else {
-                      Get.to(() => VideoPlayerScreen(
-                            videoUrl: channel.url,
-                          ));
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    minimumSize: Responsive.isMobile(context)
-                        ? const Size(70, 25)
-                        : null,
-                    padding: Responsive.isMobile(context)
-                        ? const EdgeInsets.all(0)
-                        : null,
-                  ),
-                  child: Text("Play",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: Responsive.isMobile(context) ? 45.sp : 16.sp,
-                      )),
-                ),
-                FittedBox(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.to(() => AddChannelToGategory(
-                            channel: channel,
-                          ));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      minimumSize: Responsive.isMobile(context)
-                          ? const Size(70, 25)
-                          : null,
-                      padding: Responsive.isMobile(context)
-                          ? const EdgeInsets.all(0)
-                          : null,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Skeletonizer(
+                      enableSwitchAnimation: true,
+                      enabled: true,
+                      child: Skeleton.shade(
+                          child: Icon(Icons.live_tv_outlined, size: 50.dm)),
                     ),
-                    child: Text("Add to Gategory",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize:
-                              Responsive.isMobile(context) ? 35.sp : 16.sp,
-                        )),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
-                ),
-              ],
-            ),
+            channel.tvgName.startsWith('#')
+                ? const SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // print(channel.toString());
+                          // return;
+                          if (kIsWeb) {
+                            Get.to(() => VideoPlayerWeb(
+                                  videoUrl: channel.url,
+                                ));
+                          } else {
+                            Get.to(() => VideoPlayerScreen(
+                                  videoUrl: channel.url,
+                                ));
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          minimumSize: Responsive.isMobile(context)
+                              ? const Size(70, 25)
+                              : null,
+                          padding: Responsive.isMobile(context)
+                              ? const EdgeInsets.all(0)
+                              : null,
+                        ),
+                        child: Text("Play",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  Responsive.isMobile(context) ? 45.sp : 16.sp,
+                            )),
+                      ),
+                      FittedBox(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Get.to(() => AddChannelToGategory(
+                            //       channel: channel,
+                            //     ));
+                            print(channel.toString());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            minimumSize: Responsive.isMobile(context)
+                                ? const Size(70, 25)
+                                : null,
+                            padding: Responsive.isMobile(context)
+                                ? const EdgeInsets.all(0)
+                                : null,
+                          ),
+                          child: Text("Add to Gategory",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: Responsive.isMobile(context)
+                                    ? 35.sp
+                                    : 16.sp,
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),

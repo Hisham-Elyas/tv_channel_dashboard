@@ -19,6 +19,9 @@ class ChannelsController extends GetxController {
       update();
     }, (r) {
       channel = r;
+      // channel.removeWhere(
+      //   (element) => element.tvgName.startsWith('#'),
+      // );
       statusReq = StatusRequest.success;
       update();
     });
