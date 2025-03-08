@@ -199,7 +199,7 @@ class CategoriesCardWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: Responsive.isMobile(context) ? 5.h : 50.h),
+                SizedBox(height: Responsive.isMobile(context) ? 5.h : 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
