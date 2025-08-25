@@ -10,6 +10,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/helpers/enums.dart';
 import '../../responsive.dart';
 import '../widget/menu/home_nav_bar.dart';
+import 'Add_channel_to_gategory_screen.dart';
 import 'controllers/channel_controller.dart';
 import 'data/models/channel_model.dart';
 import 'data/models/group_channel_model.dart';
@@ -211,10 +212,10 @@ class ChannelCardWidget extends StatelessWidget {
                       FittedBox(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Get.to(() => AddChannelToGategory(
-                            //       channel: channel,
-                            //     ));
-                            print(channel.toString());
+                            Get.to(() => AddChannelToGategory(
+                                  channel: channel,
+                                ));
+                            // print(channel.toString());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey,
